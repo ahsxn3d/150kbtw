@@ -1,0 +1,6 @@
+{
+  "name": "150k // CS2 World Record Premier Streamer Hub",
+  "description": "The official tactical command center and settings armory for Mika '150k' — 32K+ CS2 Premier World Record holder from Switzerland.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
