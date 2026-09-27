@@ -94,11 +94,11 @@ export const BoardroomPage: React.FC<BoardroomPageProps> = ({ onCopy }) => {
   return (
     <div className="w-full flex flex-col gap-4 sm:gap-5 pt-3 sm:pt-4 pb-14 sm:pb-16 px-3 sm:px-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 shrink-0 pb-2 border-b border-white/5">
+      <div className="flex flex-wrap items-center justify-between gap-3 shrink-0 pb-2">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2 tactical-font">
             <Briefcase className="w-5 h-5 text-[#ff1e27]" />
-            <span>SPONSORSHIPS & BUSINESS // PARTNER INQUIRIES</span>
+            <span>COMMUNITY REWARDS & EXCLUSIVE PARTNER PERKS</span>
           </h2>
           <p className="text-xs text-neutral-400 font-mono mt-0.5">
             Partner with Mika "150k" — Switzerland's leading CS2 streamer and Premier world record holder.
@@ -370,7 +370,7 @@ export const BoardroomPage: React.FC<BoardroomPageProps> = ({ onCopy }) => {
       )}
 
       {/* Bottom Legal / Management Footnote */}
-      <div className="shrink-0 pt-2 border-t border-white/5 text-[11px] font-mono text-neutral-500 flex flex-wrap items-center justify-between gap-2">
+      <div className="shrink-0 pt-2 text-[11px] font-mono text-neutral-500 flex flex-wrap items-center justify-between gap-2">
         <span>© 2026 150k_btw · Mika · Switzerland. All rights reserved.</span>
         <span className="text-neutral-400">Representation: 150kbtw@gmail.com · Verified Swiss Esports</span>
       </div>

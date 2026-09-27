@@ -1,4 +1,4 @@
-export type NavigationTab = 'HUB' | 'CONFIG' | 'SETUP' | 'PARTNERS' | 'ARMORY' | 'RIG' | 'BOARDROOM';
+export type NavigationTab = 'HUB' | 'CONFIG' | 'SETUP' | 'REWARDS' | 'PARTNERS' | 'ARMORY' | 'RIG' | 'BOARDROOM';
 
 export interface SocialLink {
   id: string;

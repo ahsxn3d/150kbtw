@@ -51,8 +51,6 @@ export const SpotlightGlow: React.FC = () => {
         />
       )}
 
-      {/* Subtle tactical grid overlay */}
-      <div className="absolute inset-0 tactical-grid-bg opacity-30" />
     </div>
   );
 };

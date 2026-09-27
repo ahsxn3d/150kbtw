@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { Play, Pause, Music, Radio } from 'lucide-react';
 import { useAudioPlayer } from '../context/AudioContext';
-import { RealtimeAudioVisualizer } from './RealtimeAudioVisualizer';
+import { CircularAudioVisualizer } from './CircularAudioVisualizer';
 
 interface CentralGlassHeroCardProps {
   onNotify?: (msg: string) => void;
@@ -113,58 +113,23 @@ export const CentralGlassHeroCard: React.FC<CentralGlassHeroCardProps> = ({ onNo
           </div>
         </div>
 
-        {/* Center: Official 150k Avatar Image (Shorter, Compact Size) with Pulsating Crimson Ring */}
+        {/* Center: Phonk Circular Audio Analyzer with Official 150k Logo */}
         <div
-          className="relative flex items-center justify-center my-auto z-20 py-0.5"
+          className="relative flex items-center justify-center my-auto z-20 py-2"
           style={{ transform: 'translateZ(45px)' }}
         >
-          {/* Animated Pulsating Crimson Ring (Outer Wave) */}
-          <div
-            className="absolute -inset-3 rounded-full border border-[#ff1e27]/40 pointer-events-none transition-all duration-700"
-            style={{
-              boxShadow:
-                isPlaying || isHovered
-                  ? '0 0 30px rgba(255,30,39,0.7), inset 0 0 15px rgba(255,30,39,0.4)'
-                  : '0 0 15px rgba(255,30,39,0.3)',
-              animation: 'pulse 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            }}
+          <CircularAudioVisualizer
+            size={230}
+            avatarSize={104}
+            avatarSrc="/avatar.png"
           />
-
-          {/* Animated Pulsating Crimson Ring (Inner Glow) */}
-          <div
-            className="absolute -inset-1.5 rounded-full border-2 border-[#ff1e27] pointer-events-none transition-all duration-300"
-            style={{
-              boxShadow: '0 0 20px rgba(255,30,39,0.85), inset 0 0 12px rgba(255,30,39,0.5)',
-              transform: isHovered ? 'scale(1.04)' : 'scale(1)',
-            }}
-          />
-
-          {/* Shorter Compact Avatar (w-28 h-28 / w-30 h-30) */}
-          <div className="relative w-28 h-28 sm:w-30 sm:h-30 rounded-full overflow-hidden bg-[#08080a] border-2 border-white/20 shadow-2xl flex items-center justify-center">
-            <img
-              src="/avatar.png"
-              alt="150k Official Avatar"
-              className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500 select-none pointer-events-none"
-            />
-            {/* Inner subtle vignette */}
-            <div className="absolute inset-0 rounded-full shadow-[inset_0_0_15px_rgba(0,0,0,0.7)] pointer-events-none" />
-          </div>
         </div>
 
-        {/* Bottom Section: Real-Time Audio Frequency Visualizer + Play Button */}
+        {/* Bottom Section: Interactive Play / Audio Control Badge */}
         <div
-          className="w-full flex flex-col items-center gap-2 z-20 shrink-0"
+          className="w-full flex flex-col items-center z-20 shrink-0 mt-auto pt-2"
           style={{ transform: 'translateZ(35px)' }}
         >
-          {/* Real-Time Reactive Audio Frequency Visualizer with 24 Bars & Floating Peak Caps */}
-          <div className="w-full flex items-center justify-center px-1">
-            <RealtimeAudioVisualizer
-              height={46}
-              barWidthClass="w-2"
-              gapClass="gap-[3px]"
-              className="w-full max-w-[280px]"
-            />
-          </div>
 
           {/* Interactive Play / Audio Control Badge (No Toast Notifications) */}
           <div
@@ -177,7 +142,7 @@ export const CentralGlassHeroCard: React.FC<CentralGlassHeroCardProps> = ({ onNo
                 ? 'bg-[#ff1e27] border-[#ff4d54] text-white shadow-[0_0_20px_rgba(255,30,39,0.6)]'
                 : 'bg-neutral-900/90 hover:bg-neutral-800 border-white/10 hover:border-[#ff1e27]/50 text-neutral-200'
             }`}
-            title="Click to toggle anthem audio playback"
+            title="Click to play Dream"
           >
             <div className="flex items-center gap-2 min-w-0">
               <div
@@ -193,7 +158,7 @@ export const CentralGlassHeroCard: React.FC<CentralGlassHeroCardProps> = ({ onNo
               </div>
               <div className="min-w-0 text-left">
                 <span className="block text-[11px] font-bold truncate">
-                  {isPlaying ? 'Now Playing' : 'Play Stream Anthem'}
+                  {isPlaying ? 'Now Playing' : 'Play Dream'}
                 </span>
                 <span className="block text-[10px] font-mono opacity-90 truncate">
                   {trackTitle}

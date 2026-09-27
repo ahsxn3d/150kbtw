@@ -68,7 +68,7 @@ export const HubPage: React.FC<HubPageProps> = ({ onCopy, onNavigateSettings }) 
       url: 'https://steamcommunity.com/id/150k',
       svgIcon: '/steam.svg',
       color: '#66c0f4',
-      status: 'LEVEL 150',
+      status: 'LEVEL 200',
     },
     {
       id: 'faceit',
@@ -77,7 +77,7 @@ export const HubPage: React.FC<HubPageProps> = ({ onCopy, onNavigateSettings }) 
       url: 'https://faceit.com/en/players/mika666',
       svgIcon: '/faceit.svg',
       color: '#ff5500',
-      status: 'ELO 3850+',
+      status: 'LVL 8 · 1800+ ELO',
     },
   ];
 
@@ -128,13 +128,10 @@ export const HubPage: React.FC<HubPageProps> = ({ onCopy, onNavigateSettings }) 
               <span className="text-2xl sm:text-3xl font-black text-white font-mono tracking-tight tabular-nums">
                 30,842
               </span>
-              <span className="text-[10px] font-mono font-bold text-[#ff1e27] bg-[#ff1e27]/15 px-2 py-0.5 rounded border border-[#ff1e27]/40 shadow-sm">
-                #1 GLOBAL RECORD
-              </span>
             </div>
 
             <p className="text-[11px] text-neutral-400 leading-relaxed">
-              Highest officially authenticated CS2 Premier rating achieved live on stream against European FPL and pro team stacks.
+              Highest official rating achieved on live stream.
             </p>
           </div>
 
@@ -185,14 +182,9 @@ export const HubPage: React.FC<HubPageProps> = ({ onCopy, onNavigateSettings }) 
             rel="noopener noreferrer"
             className="smoked-glass rounded-2xl p-3.5 sm:p-4 crimson-glow-hover block relative overflow-hidden group transition-all"
           >
-            <div className="flex items-center justify-between mb-1">
-              <span className="flex items-center gap-1.5 text-[11px] font-mono text-neutral-300">
-                <Flame className="w-3.5 h-3.5 text-[#ff1e27]" />
-                <span className="font-semibold">OFFICIAL BROADCAST</span>
-              </span>
-              <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-purple-950/60 text-purple-300 border border-purple-800/40">
-                1.5K LIVE · 18.4K VIEWS
-              </span>
+            <div className="flex items-center gap-1.5 mb-1 text-[11px] font-mono text-neutral-300">
+              <Flame className="w-3.5 h-3.5 text-[#ff1e27]" />
+              <span className="font-semibold">OFFICIAL BROADCAST</span>
             </div>
 
             <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-[#ff1e27] transition-colors flex items-center justify-between">
@@ -233,7 +225,7 @@ export const HubPage: React.FC<HubPageProps> = ({ onCopy, onNavigateSettings }) 
       </div>
 
       {/* Bottom Section: Official Channels & Socials with Real SVG Icons and Visible Gap */}
-      <div className="shrink-0 pt-1.5 pb-1 border-t border-white/5 mb-1 sm:mb-2">
+      <div className="shrink-0 pt-1.5 pb-1 mb-1 sm:mb-2">
         <div className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider mb-1.5 flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-[#ff1e27]" />
           <span className="font-semibold text-neutral-300">OFFICIAL CHANNELS & SOCIALS</span>

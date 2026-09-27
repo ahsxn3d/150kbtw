@@ -21,6 +21,7 @@ export const SoundDeck: React.FC<SoundDeckProps> = ({ onNotify }) => {
     trackTitle,
     artist,
     bpm,
+    frequencyData,
     analyserRef,
   } = useAudioPlayer();
 
@@ -40,7 +41,7 @@ export const SoundDeck: React.FC<SoundDeckProps> = ({ onNotify }) => {
     <footer
       role="region"
       aria-label="Sound Deck"
-      className="w-full shrink-0 border-t border-white/10 bg-[#09090b]/95 backdrop-blur-2xl px-4 py-2.5 z-40 transition-colors"
+      className="w-full shrink-0 border-t border-white/10 bg-[#09090b]/50 backdrop-blur-md px-4 py-2.5 z-40 transition-colors"
       style={{
         boxShadow: '0 -10px 30px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06)',
       }}
@@ -71,13 +72,10 @@ export const SoundDeck: React.FC<SoundDeckProps> = ({ onNotify }) => {
               <span className="text-sm font-bold text-white truncate max-w-[200px] sm:max-w-xs">
                 {trackTitle}
               </span>
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider bg-[#ff1e27]/15 text-[#ff4d54] border border-[#ff1e27]/30 shrink-0">
-                150K ANTHEM
-              </span>
             </div>
             <div className="text-[10px] text-neutral-400 font-mono flex items-center gap-1.5 mt-0.5">
               <span className="w-1.5 h-1.5 rounded-full bg-[#ff1e27] animate-pulse" />
-              <span>OFFICIAL STREAM TRACK</span>
+              <span>150K</span>
             </div>
           </div>
         </div>
@@ -90,7 +88,7 @@ export const SoundDeck: React.FC<SoundDeckProps> = ({ onNotify }) => {
               onClick={() => {
                 togglePlay();
               }}
-              aria-label={isPlaying ? 'Pause anthem' : 'Play anthem'}
+              aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
               className="relative group p-2.5 rounded-full bg-[#ff1e27] text-white hover:bg-[#ff333b] hover:shadow-[0_0_20px_rgba(255,30,39,0.6)] active:scale-95 transition-all duration-200 cursor-pointer"
             >
               {isPlaying ? (
@@ -100,13 +98,14 @@ export const SoundDeck: React.FC<SoundDeckProps> = ({ onNotify }) => {
               )}
             </button>
 
-            {/* Real-time Reactive Audio Frequency Visualizer Component (No BARS label) */}
-            <div className="relative flex items-center bg-neutral-950/90 px-3 py-1 rounded-xl border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+            {/* 20-Bar Chunky Equalizer Component */}
+            <div className="relative flex items-center bg-neutral-950/70 px-2.5 py-1 rounded-xl border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
               <RealtimeAudioVisualizer
-                height={26}
-                barWidthClass="w-1 sm:w-1.5"
-                gapClass="gap-[2px]"
-                className="w-[120px] sm:w-[150px]"
+                height={28}
+                barWidthClass="w-[4.5px] sm:w-[5px]"
+                gapClass="gap-[3px]"
+                barCount={20}
+                className="w-[145px] sm:w-[160px]"
               />
             </div>
           </div>
@@ -228,10 +227,22 @@ export const SoundDeck: React.FC<SoundDeckProps> = ({ onNotify }) => {
             </div>
           </div>
 
-          {/* Live DSP Status Badge */}
-          <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-neutral-900/90 border border-white/5 text-[10px] font-mono text-neutral-400">
-            <Radio className={`w-3.5 h-3.5 ${isPlaying ? 'text-[#ff1e27] animate-pulse drop-shadow-[0_0_6px_#ff1e27]' : 'text-neutral-500'}`} />
-            <span className="text-neutral-300 font-semibold">{isPlaying ? 'LIVE DSP 96k' : 'DSP READY'}</span>
+          {/* Live DSP Status Badge - Locked Static Dimensions Prevent Footer Layout Shifts */}
+          <div className="hidden lg:flex items-center justify-center gap-1.5 w-[124px] h-[34px] shrink-0 px-2.5 py-1.5 rounded-xl bg-neutral-900/90 border border-white/5 text-[10px] font-mono text-neutral-400 select-none">
+            <Radio
+              className={`w-3.5 h-3.5 shrink-0 transition-all duration-300 ${
+                isPlaying
+                  ? 'text-[#ff1e27] opacity-100 animate-pulse drop-shadow-[0_0_6px_#ff1e27]'
+                  : 'text-neutral-500 opacity-40'
+              }`}
+            />
+            <span
+              className={`font-semibold tracking-tight transition-colors duration-200 ${
+                isPlaying ? 'text-white' : 'text-neutral-400'
+              }`}
+            >
+              {isPlaying ? 'LIVE DSP 96k' : 'DSP'}
+            </span>
           </div>
         </div>
       </div>

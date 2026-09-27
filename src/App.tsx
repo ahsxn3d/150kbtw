@@ -74,6 +74,21 @@ export default function App() {
       gestureOrientation: 'vertical',
       smoothWheel: true,
       touchMultiplier: 2,
+      prevent: (node) => {
+        let el: HTMLElement | null = node as HTMLElement;
+        while (el && el !== mainRef.current) {
+          if (el.hasAttribute('data-lenis-prevent')) return true;
+          const style = window.getComputedStyle(el);
+          if (
+            (style.overflowY === 'auto' || style.overflowY === 'scroll') &&
+            el.scrollHeight > el.clientHeight
+          ) {
+            return true;
+          }
+          el = el.parentElement;
+        }
+        return false;
+      },
     });
     lenisRef.current = lenis;
 
@@ -90,8 +105,85 @@ export default function App() {
       { opacity: 1, filter: 'blur(0px)', scale: 1, duration: 0.8, ease: 'power3.out' }
     );
 
+    // Dedicated Butter-Smooth Inner Section Scroll Engine
+    // When hovering over an inner scrollable section, smoothly shift scroll to that element without jitter
+    const smoothScrollMap = new WeakMap<HTMLElement, { current: number; target: number }>();
+    let smoothAnimId: number | null = null;
+    const activeScrollElements = new Set<HTMLElement>();
+
+    const updateSmoothScroll = () => {
+      let hasActive = false;
+      activeScrollElements.forEach((el) => {
+        const state = smoothScrollMap.get(el);
+        if (!state) {
+          activeScrollElements.delete(el);
+          return;
+        }
+
+        const diff = state.target - state.current;
+        if (Math.abs(diff) > 0.5) {
+          state.current += diff * 0.2; // Silky smooth easing
+          el.scrollTop = state.current;
+          hasActive = true;
+        } else {
+          state.current = state.target;
+          el.scrollTop = state.target;
+          activeScrollElements.delete(el);
+        }
+      });
+
+      if (hasActive) {
+        smoothAnimId = requestAnimationFrame(updateSmoothScroll);
+      } else {
+        smoothAnimId = null;
+      }
+    };
+
+    const handleSectionWheel = (e: WheelEvent) => {
+      let target = e.target as HTMLElement | null;
+      while (target && target !== mainRef.current && target !== document.body) {
+        const isScrollable =
+          target.hasAttribute('data-lenis-prevent') ||
+          ((window.getComputedStyle(target).overflowY === 'auto' || window.getComputedStyle(target).overflowY === 'scroll') &&
+            target.scrollHeight > target.clientHeight);
+
+        if (isScrollable) {
+          const maxScroll = target.scrollHeight - target.clientHeight;
+          if (maxScroll > 1) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            let state = smoothScrollMap.get(target);
+            if (!state) {
+              state = { current: target.scrollTop, target: target.scrollTop };
+              smoothScrollMap.set(target, state);
+            }
+
+            // Sync state with actual scroll position if changed externally
+            if (Math.abs(state.current - target.scrollTop) > 25) {
+              state.current = target.scrollTop;
+              state.target = target.scrollTop;
+            }
+
+            state.target = Math.max(0, Math.min(maxScroll, state.target + e.deltaY));
+            activeScrollElements.add(target);
+
+            if (!smoothAnimId) {
+              smoothAnimId = requestAnimationFrame(updateSmoothScroll);
+            }
+          }
+          return;
+        }
+        target = target.parentElement;
+      }
+    };
+
+    window.addEventListener('wheel', handleSectionWheel, { passive: false });
+
     return () => {
       cancelAnimationFrame(rafId);
+      if (smoothAnimId) cancelAnimationFrame(smoothAnimId);
+      window.removeEventListener('wheel', handleSectionWheel);
       lenis.destroy();
       lenisRef.current = null;
     };
@@ -173,9 +265,9 @@ export default function App() {
               </motion.div>
             )}
 
-            {isTab(activeTab, 'PARTNERS', 'BOARDROOM') && (
+            {isTab(activeTab, 'REWARDS', 'PARTNERS', 'BOARDROOM') && (
               <motion.div
-                key="PARTNERS"
+                key="REWARDS"
                 initial={{ opacity: 0, y: 8, scale: 0.995 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -8, scale: 0.995 }}

@@ -30,18 +30,18 @@ export const TacticalHeader: React.FC<TacticalHeaderProps> = ({
   const normalizedTab: 'HUB' | 'CONFIG' | 'SETUP' | 'PARTNERS' = 
     activeTab === 'ARMORY' ? 'CONFIG' :
     activeTab === 'RIG' ? 'SETUP' :
-    activeTab === 'BOARDROOM' ? 'PARTNERS' :
+    (activeTab === 'BOARDROOM' || activeTab === 'REWARDS') ? 'PARTNERS' :
     activeTab as 'HUB' | 'CONFIG' | 'SETUP' | 'PARTNERS';
 
   const tabs: { id: NavigationTab; label: string; index: string }[] = [
     { id: 'HUB', label: 'OVERVIEW', index: '01' },
     { id: 'CONFIG', label: 'SETTINGS', index: '02' },
     { id: 'SETUP', label: 'SETUP', index: '03' },
-    { id: 'PARTNERS', label: 'PARTNERS', index: '04' },
+    { id: 'PARTNERS', label: 'REWARDS', index: '04' },
   ];
 
   return (
-    <header className="w-full shrink-0 border-b border-white/10 bg-[#09090b]/85 backdrop-blur-2xl z-30 transition-all">
+    <header className="w-full shrink-0 border-b border-white/10 bg-[#09090b]/45 backdrop-blur-md z-30 transition-all">
       <div className="max-w-7xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between gap-4">
         {/* Brand Zone */}
         <div className="flex items-center gap-3.5">

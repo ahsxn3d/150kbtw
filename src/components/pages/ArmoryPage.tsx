@@ -205,7 +205,7 @@ echo "=== 150k AUTOEXEC LOADED SUCCESSFULLY ==="
   return (
     <div className="w-full flex flex-col gap-4 sm:gap-5 pt-3 sm:pt-4 pb-14 sm:pb-16 px-3 sm:px-6 max-w-7xl mx-auto">
       {/* Header Info Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 shrink-0 pb-2 border-b border-white/5">
+      <div className="flex flex-wrap items-center justify-between gap-3 shrink-0 pb-2">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2 tactical-font">
             <Terminal className="w-5 h-5 text-[#ff1e27]" />
@@ -501,7 +501,7 @@ echo "=== 150k AUTOEXEC LOADED SUCCESSFULLY ==="
                 </div>
 
                 {/* Bind Rows */}
-                <div className="flex flex-col gap-1.5 max-h-[380px] overflow-y-auto pr-1">
+                <div data-lenis-prevent className="flex flex-col gap-1.5 max-h-[360px] overflow-y-auto overscroll-contain pr-1">
                   {category.binds.map((bind) => {
                     const isRowCopied = copiedId === bind.id;
 
@@ -552,7 +552,7 @@ echo "=== 150k AUTOEXEC LOADED SUCCESSFULLY ==="
       </div>
 
       {/* Steam Launch Options Bar */}
-      <div className="shrink-0 pt-2 border-t border-white/5">
+      <div className="shrink-0 pt-2">
         <div className="smoked-glass rounded-xl p-3 flex flex-col sm:flex-row items-center justify-between gap-3 crimson-glow-hover">
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <div className="w-8 h-8 rounded-lg bg-neutral-900 border border-[#ff1e27]/40 flex items-center justify-center shrink-0">

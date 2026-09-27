@@ -9,6 +9,7 @@ interface AudioContextType {
   setVolume: (v: number) => void;
   isMuted: boolean;
   setIsMuted: React.Dispatch<React.SetStateAction<boolean>>;
+  currentVolume: number;
   currentTime: number;
   setCurrentTime: (t: number) => void;
   totalDuration: number;
@@ -40,7 +41,7 @@ export const AudioPlayerProvider: React.FC<AudioProviderProps> = ({ children, on
   const [volume, setVolume] = useState<number>(0.8);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
-  const [totalDuration, setTotalDuration] = useState<number>(242);
+  const [totalDuration, setTotalDuration] = useState<number>(122);
   const [frequencyData, setFrequencyData] = useState<number[]>(new Array(24).fill(0.1));
   const [trackTitle, setTrackTitle] = useState<string>('Dream');
   const [artist, setArtist] = useState<string>('');
@@ -64,11 +65,14 @@ export const AudioPlayerProvider: React.FC<AudioProviderProps> = ({ children, on
       audio.loop = true;
       audio.preload = 'auto';
 
-      audio.addEventListener('loadedmetadata', () => {
+      const updateDuration = () => {
         if (audio.duration && !isNaN(audio.duration) && isFinite(audio.duration)) {
           setTotalDuration(Math.floor(audio.duration));
         }
-      });
+      };
+
+      audio.addEventListener('loadedmetadata', updateDuration);
+      audio.addEventListener('durationchange', updateDuration);
 
       audio.addEventListener('timeupdate', () => {
         setCurrentTime(Math.floor(audio.currentTime));
@@ -81,8 +85,10 @@ export const AudioPlayerProvider: React.FC<AudioProviderProps> = ({ children, on
       const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       const ctx = new AudioCtx();
       const analyser = ctx.createAnalyser();
-      analyser.fftSize = 256;
-      analyser.smoothingTimeConstant = 0.65;
+      analyser.fftSize = 2048;
+      analyser.smoothingTimeConstant = 0.45;
+      analyser.minDecibels = -80;
+      analyser.maxDecibels = -10;
 
       const masterGain = ctx.createGain();
       const effectiveVol = isMuted ? 0 : volume;
@@ -104,15 +110,19 @@ export const AudioPlayerProvider: React.FC<AudioProviderProps> = ({ children, on
       analyserRef.current = analyser;
       gainNodeRef.current = masterGain;
     } else if (audioCtxRef.current.state === 'suspended') {
-      audioCtxRef.current.resume();
+      audioCtxRef.current.resume().catch(console.warn);
     }
   }, [audioSource, isMuted, volume]);
 
-  // Play / Pause controls
-  const play = useCallback(() => {
+  // Play / Pause controls with explicit async resume
+  const play = useCallback(async () => {
     initAudioGraph();
     if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
-      audioCtxRef.current.resume();
+      try {
+        await audioCtxRef.current.resume();
+      } catch (err) {
+        console.warn('AudioContext resume error:', err);
+      }
     }
     if (audioRef.current) {
       audioRef.current.play().then(() => {
@@ -208,7 +218,7 @@ export const AudioPlayerProvider: React.FC<AudioProviderProps> = ({ children, on
             count++;
           }
           const rawAvg = count > 0 ? (sum / count) * 0.6 + maxInBand * 0.4 : 0;
-          
+
           let val = 0.1;
           if (rawAvg > 8) {
             // Perceptual power-law with balanced progressive curve
@@ -252,6 +262,8 @@ export const AudioPlayerProvider: React.FC<AudioProviderProps> = ({ children, on
     };
   }, [isPlaying]);
 
+  const currentVolume = isMuted ? 0 : volume;
+
   return (
     <AudioPlayerContext.Provider
       value={{
@@ -263,6 +275,7 @@ export const AudioPlayerProvider: React.FC<AudioProviderProps> = ({ children, on
         setVolume,
         isMuted,
         setIsMuted,
+        currentVolume,
         currentTime,
         setCurrentTime: handleSetCurrentTime,
         totalDuration,
