@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { NavigationTab } from '../types';
 import { Radio, ExternalLink } from 'lucide-react';
+import { useTwitch } from '../context/TwitchContext';
 
 interface TacticalHeaderProps {
   activeTab: NavigationTab;
@@ -12,19 +13,7 @@ export const TacticalHeader: React.FC<TacticalHeaderProps> = ({
   activeTab,
   onSelectTab,
 }) => {
-  // Real-time visitor counter badge that fluctuates realistically
-  const [visitorCount, setVisitorCount] = useState<number>(1482);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setVisitorCount((prev) => {
-        const delta = Math.floor(Math.random() * 7) - 3; // -3 to +3
-        return Math.max(1420, Math.min(1560, prev + delta));
-      });
-    }, 4500);
-
-    return () => clearInterval(interval);
-  }, []);
+  const { isLive, viewerCount } = useTwitch();
 
   // Standardize activeTab to primary IDs
   const normalizedTab: 'HUB' | 'CONFIG' | 'SETUP' | 'PARTNERS' = 
@@ -62,25 +51,41 @@ export const TacticalHeader: React.FC<TacticalHeaderProps> = ({
           </div>
 
           {/* Real-time Live Viewers & Total Number of Viewers Badge */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-900/80 border border-white/10 text-[11px] font-mono text-neutral-300 shadow-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ff1e27] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ff1e27]" />
-            </span>
-            <span className="tabular-nums font-bold text-white">
-              {visitorCount.toLocaleString()}
-            </span>
-            <span className="text-[#ff4d54] uppercase tracking-wider text-[10px] font-semibold">
-              Live
-            </span>
-            <span className="text-neutral-600">·</span>
-            <span className="tabular-nums font-semibold text-neutral-300">
-              18.4K
-            </span>
-            <span className="text-neutral-500 uppercase tracking-wider text-[10px]">
-              Total Views
-            </span>
-          </div>
+          {isLive ? (
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/40 border border-[#ff1e27]/50 text-[11px] font-mono text-neutral-300 shadow-[0_0_12px_rgba(255,30,39,0.3)]">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ff1e27] opacity-80" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ff1e27]" />
+              </span>
+              <span className="tabular-nums font-bold text-white">
+                {viewerCount > 0 ? viewerCount.toLocaleString() : 'ON AIR'}
+              </span>
+              <span className="text-[#ff1e27] uppercase tracking-wider text-[10px] font-bold">
+                Live
+              </span>
+              <span className="text-neutral-600">·</span>
+              <span className="tabular-nums font-semibold text-neutral-300">
+                384K
+              </span>
+              <span className="text-neutral-500 uppercase tracking-wider text-[10px]">
+                Views
+              </span>
+            </div>
+          ) : (
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-900/80 border border-white/10 text-[11px] font-mono text-neutral-300 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-neutral-500" />
+              <span className="text-neutral-400 uppercase tracking-wider text-[10px] font-semibold">
+                Offline
+              </span>
+              <span className="text-neutral-600">·</span>
+              <span className="tabular-nums font-semibold text-neutral-300">
+                384K
+              </span>
+              <span className="text-neutral-500 uppercase tracking-wider text-[10px]">
+                Total Views
+              </span>
+            </div>
+          )}
         </div>
 
         {/* 4 Clean Gaming Navigation Tabs */}
@@ -121,11 +126,17 @@ export const TacticalHeader: React.FC<TacticalHeaderProps> = ({
             href="https://twitch.tv/150k"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#ff1e27]/10 hover:bg-[#ff1e27] border border-[#ff1e27]/40 hover:border-[#ff1e27] text-white text-xs font-semibold tracking-wider transition-all duration-200 shadow-[0_0_15px_rgba(255,30,39,0.15)] group"
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg border text-white text-xs font-semibold tracking-wider transition-all duration-200 group ${
+              isLive
+                ? 'bg-[#ff1e27] hover:bg-[#ff333b] border-[#ff1e27] shadow-[0_0_20px_rgba(255,30,39,0.55)]'
+                : 'bg-[#ff1e27]/10 hover:bg-[#ff1e27] border-[#ff1e27]/40 hover:border-[#ff1e27] shadow-[0_0_15px_rgba(255,30,39,0.15)]'
+            }`}
           >
-            <Radio className="w-3.5 h-3.5 text-[#ff1e27] group-hover:text-white animate-pulse" />
-            <span className="uppercase font-mono text-[11px]">TWITCH.TV/150K</span>
-            <ExternalLink className="w-3 h-3 text-neutral-400 group-hover:text-white" />
+            <Radio className={`w-3.5 h-3.5 ${isLive ? 'text-white animate-pulse' : 'text-[#ff1e27] group-hover:text-white'}`} />
+            <span className="uppercase font-mono text-[11px] font-bold">
+              {isLive ? 'LIVE ON TWITCH' : 'TWITCH.TV/150K'}
+            </span>
+            <ExternalLink className="w-3 h-3 text-neutral-300 group-hover:text-white" />
           </a>
         </div>
       </div>

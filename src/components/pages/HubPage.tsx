@@ -8,6 +8,7 @@ import {
   Copy,
   ChevronRight
 } from 'lucide-react';
+import { useTwitch } from '../../context/TwitchContext';
 
 interface HubPageProps {
   onCopy: (text: string, title?: string) => void;
@@ -15,6 +16,8 @@ interface HubPageProps {
 }
 
 export const HubPage: React.FC<HubPageProps> = ({ onCopy, onNavigateSettings }) => {
+  const { isLive, title, game, viewerCount, uptime } = useTwitch();
+
   const socials = [
     {
       id: 'twitch',
@@ -23,7 +26,9 @@ export const HubPage: React.FC<HubPageProps> = ({ onCopy, onNavigateSettings }) 
       url: 'https://twitch.tv/150k',
       svgIcon: '/twitch.svg',
       color: '#9146ff',
-      status: '1.5K LIVE · 384K VIEWS',
+      status: isLive 
+        ? `${viewerCount > 0 ? `${viewerCount.toLocaleString()} LIVE` : 'LIVE NOW'}` 
+        : 'OFFLINE · 384K VIEWS',
     },
     {
       id: 'youtube',
@@ -87,16 +92,25 @@ export const HubPage: React.FC<HubPageProps> = ({ onCopy, onNavigateSettings }) 
     <div className="w-full h-full flex flex-col justify-between pt-1 pb-3 px-3 sm:px-6 max-w-7xl mx-auto overflow-hidden">
       {/* Top Banner / Live Status & Player Bio (Compact) */}
       <div className="flex flex-wrap items-center justify-between gap-2 shrink-0">
-        {/* Pulsing Live Status Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/40 border border-[#ff1e27]/50 shadow-[0_0_15px_rgba(255,30,39,0.3)]">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ff1e27] opacity-80" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ff1e27]" />
-          </span>
-          <span className="text-[11px] sm:text-xs font-mono font-bold tracking-wider text-white">
-            LIVE ON TWITCH · 30K PREMIER RECORD
-          </span>
-        </div>
+        {/* Pulsing Live Status Badge / Offline Indicator */}
+        {isLive ? (
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/50 border border-[#ff1e27]/60 shadow-[0_0_15px_rgba(255,30,39,0.35)]">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ff1e27] opacity-80" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ff1e27]" />
+            </span>
+            <span className="text-[11px] sm:text-xs font-mono font-bold tracking-wider text-white">
+              LIVE ON TWITCH · {viewerCount > 0 ? `${viewerCount.toLocaleString()} VIEWERS` : (uptime ? `UPTIME ${uptime.toUpperCase()}` : '30K PREMIER RECORD')}
+            </span>
+          </div>
+        ) : (
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-900/70 border border-white/10 shadow-sm backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-neutral-500" />
+            <span className="text-[11px] sm:text-xs font-mono font-bold tracking-wider text-neutral-300">
+              OFFLINE · CS2 PREMIER RECORD HOLDER
+            </span>
+          </div>
+        )}
 
         {/* Player Profile Quick Info */}
         <div className="flex items-center gap-2 text-[11px] sm:text-xs font-mono text-neutral-300 bg-neutral-900/60 px-3 py-1 rounded-lg border border-white/10 backdrop-blur-md">
@@ -180,25 +194,52 @@ export const HubPage: React.FC<HubPageProps> = ({ onCopy, onNavigateSettings }) 
             href="https://twitch.tv/150k"
             target="_blank"
             rel="noopener noreferrer"
-            className="smoked-glass rounded-2xl p-3.5 sm:p-4 crimson-glow-hover block relative overflow-hidden group transition-all"
+            className={`smoked-glass rounded-2xl p-3.5 sm:p-4 crimson-glow-hover block relative overflow-hidden group transition-all ${
+              isLive ? 'border-[#ff1e27]/40 shadow-[0_0_20px_rgba(255,30,39,0.15)]' : ''
+            }`}
           >
-            <div className="flex items-center gap-1.5 mb-1 text-[11px] font-mono text-neutral-300">
-              <Flame className="w-3.5 h-3.5 text-[#ff1e27]" />
-              <span className="font-semibold">OFFICIAL BROADCAST</span>
+            <div className="flex items-center justify-between gap-1.5 mb-1.5 text-[11px] font-mono text-neutral-300">
+              {isLive ? (
+                <div className="flex items-center gap-1.5">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ff1e27] opacity-80" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ff1e27]" />
+                  </span>
+                  <span className="font-bold text-[#ff1e27] tracking-wider uppercase">
+                    LIVE NOW · {game.toUpperCase()}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1.5">
+                  <Flame className="w-3.5 h-3.5 text-[#ff1e27]" />
+                  <span className="font-semibold text-neutral-300 uppercase">OFFICIAL BROADCAST</span>
+                </div>
+              )}
+
+              {isLive && viewerCount > 0 && (
+                <span className="px-2 py-0.5 rounded-full bg-red-950/60 border border-[#ff1e27]/40 text-[#ff4d54] text-[10px] font-bold">
+                  {viewerCount.toLocaleString()} VIEWERS
+                </span>
+              )}
             </div>
 
             <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-[#ff1e27] transition-colors flex items-center justify-between">
-              <span>Watch Mika Live on Stream</span>
+              <span>{isLive ? 'Watch Mika Live on Stream' : 'Watch Mika on Twitch'}</span>
               <ExternalLink className="w-3.5 h-3.5 text-neutral-500 group-hover:text-[#ff1e27] transition-colors" />
             </h3>
 
-            <p className="text-[11px] text-neutral-400 mt-1">
-              Catch 400Hz CS2 Premier grinds, clutches, and autoexec mechanics daily.
+            <p className="text-[11px] text-neutral-300 mt-1 line-clamp-2 leading-relaxed">
+              {title || 'Catch 400Hz CS2 Premier grinds, clutches, and autoexec mechanics daily.'}
             </p>
 
-            <div className="mt-2 flex items-center gap-1 text-[10px] font-mono text-[#ff4d54]">
-              <span>twitch.tv/150k</span>
-              <ChevronRight className="w-3 h-3" />
+            <div className="mt-2 flex items-center justify-between text-[10px] font-mono">
+              <span className="text-[#ff4d54] flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                <span>twitch.tv/150k</span>
+                <ChevronRight className="w-3 h-3" />
+              </span>
+              <span className="text-neutral-500">
+                {isLive ? 'Tap to watch live' : 'Follow for alerts'}
+              </span>
             </div>
           </a>
 

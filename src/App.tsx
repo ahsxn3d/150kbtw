@@ -10,6 +10,7 @@ import { ArmoryPage } from './components/pages/ArmoryPage';
 import { BattlestationPage } from './components/pages/BattlestationPage';
 import { BoardroomPage } from './components/pages/BoardroomPage';
 import { AudioPlayerProvider } from './context/AudioContext';
+import { TwitchProvider } from './context/TwitchContext';
 import { motion, AnimatePresence } from 'motion/react';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
@@ -201,8 +202,9 @@ export default function App() {
   };
 
   return (
-    <AudioPlayerProvider>
-      <div className="relative min-h-screen h-screen bg-[#09090b] text-neutral-100 flex flex-col justify-between selection:bg-[#ff1e27] selection:text-white overflow-hidden">
+    <TwitchProvider>
+      <AudioPlayerProvider>
+        <div className="relative min-h-screen h-screen bg-[#09090b] text-neutral-100 flex flex-col justify-between selection:bg-[#ff1e27] selection:text-white overflow-hidden">
         {/* Infinite Looping Cinematic Video Background */}
         <BackgroundVideo />
 
@@ -284,5 +286,6 @@ export default function App() {
         <SoundDeck />
       </div>
     </AudioPlayerProvider>
+  </TwitchProvider>
   );
 }
