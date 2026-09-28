@@ -50,9 +50,9 @@ export const TacticalHeader: React.FC<TacticalHeaderProps> = ({
             </div>
           </div>
 
-          {/* Real-time Live Viewers & Total Number of Viewers Badge */}
+          {/* Real-time Live Viewers Badge */}
           {isLive ? (
-            <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/40 border border-[#ff1e27]/50 text-[11px] font-mono text-neutral-300 shadow-[0_0_12px_rgba(255,30,39,0.3)] whitespace-nowrap shrink-0 flex-nowrap">
+            <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/40 border border-[#ff1e27]/50 text-[11px] font-mono text-neutral-300 shadow-[0_0_12px_rgba(255,30,39,0.3)] whitespace-nowrap shrink-0">
               <span className="relative flex h-2 w-2 shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ff1e27] opacity-80" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ff1e27]" />
@@ -63,40 +63,26 @@ export const TacticalHeader: React.FC<TacticalHeaderProps> = ({
               <span className="text-[#ff1e27] uppercase tracking-wider text-[10px] font-bold shrink-0">
                 Live
               </span>
-              <span className="text-neutral-600 shrink-0">·</span>
-              <span className="tabular-nums font-semibold text-neutral-300 shrink-0">
-                384K
-              </span>
-              <span className="text-neutral-500 uppercase tracking-wider text-[10px] whitespace-nowrap shrink-0">
-                Total&nbsp;Views
-              </span>
             </div>
           ) : (
-            <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-900/80 border border-white/10 text-[11px] font-mono text-neutral-300 shadow-sm whitespace-nowrap shrink-0 flex-nowrap">
+            <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-900/80 border border-white/10 text-[11px] font-mono text-neutral-300 shadow-sm whitespace-nowrap shrink-0">
               <span className="w-2 h-2 rounded-full bg-neutral-500 shrink-0" />
               <span className="text-neutral-400 uppercase tracking-wider text-[10px] font-semibold shrink-0">
                 Offline
-              </span>
-              <span className="text-neutral-600 shrink-0">·</span>
-              <span className="tabular-nums font-semibold text-neutral-300 shrink-0">
-                384K
-              </span>
-              <span className="text-neutral-500 uppercase tracking-wider text-[10px] whitespace-nowrap shrink-0">
-                Total&nbsp;Views
               </span>
             </div>
           )}
         </div>
 
         {/* 4 Clean Gaming Navigation Tabs */}
-        <nav className="flex items-center gap-1 sm:gap-1.5 p-1 rounded-xl bg-neutral-950/70 border border-white/5">
+        <nav className="flex items-center gap-1 sm:gap-1.5 p-1 rounded-xl bg-neutral-950/70 border border-white/5 shrink-0">
           {tabs.map((tab) => {
             const isActive = normalizedTab === tab.id;
             return (
               <button
                 key={tab.id}
                 onClick={() => onSelectTab(tab.id)}
-                className={`relative px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-mono tracking-wide rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
+                className={`relative px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-mono tracking-wide rounded-lg transition-colors whitespace-nowrap cursor-pointer shrink-0 ${
                   isActive
                     ? 'text-white font-bold'
                     : 'text-neutral-400 hover:text-neutral-200'
@@ -109,7 +95,7 @@ export const TacticalHeader: React.FC<TacticalHeaderProps> = ({
                     transition={{ type: 'spring', stiffness: 450, damping: 35 }}
                   />
                 )}
-                <span className="relative z-10 flex items-center gap-1">
+                <span className="relative z-10 flex items-center gap-1 whitespace-nowrap">
                   <span className={isActive ? 'text-[#ff4d54]' : 'text-neutral-500'}>
                     [{tab.index} //
                   </span>
@@ -120,23 +106,23 @@ export const TacticalHeader: React.FC<TacticalHeaderProps> = ({
           })}
         </nav>
 
-        {/* Action Zone: Twitch Quick Stream Pill */}
-        <div className="hidden md:flex items-center gap-2">
+        {/* Action Zone: Twitch Quick Stream Pill (Always Single Row) */}
+        <div className="hidden md:flex items-center gap-2 shrink-0">
           <a
             href="https://twitch.tv/150k"
             target="_blank"
             rel="noopener noreferrer"
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg border text-white text-xs font-semibold tracking-wider transition-all duration-200 group ${
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg border text-white text-xs font-semibold tracking-wider transition-all duration-200 group whitespace-nowrap shrink-0 ${
               isLive
                 ? 'bg-[#ff1e27] hover:bg-[#ff333b] border-[#ff1e27] shadow-[0_0_20px_rgba(255,30,39,0.55)]'
                 : 'bg-[#ff1e27]/10 hover:bg-[#ff1e27] border-[#ff1e27]/40 hover:border-[#ff1e27] shadow-[0_0_15px_rgba(255,30,39,0.15)]'
             }`}
           >
-            <Radio className={`w-3.5 h-3.5 ${isLive ? 'text-white animate-pulse' : 'text-[#ff1e27] group-hover:text-white'}`} />
-            <span className="uppercase font-mono text-[11px] font-bold">
+            <Radio className={`w-3.5 h-3.5 shrink-0 ${isLive ? 'text-white animate-pulse' : 'text-[#ff1e27] group-hover:text-white'}`} />
+            <span className="uppercase font-mono text-[11px] font-bold whitespace-nowrap">
               {isLive ? 'LIVE ON TWITCH' : 'TWITCH.TV/150K'}
             </span>
-            <ExternalLink className="w-3 h-3 text-neutral-300 group-hover:text-white" />
+            <ExternalLink className="w-3 h-3 text-neutral-300 group-hover:text-white shrink-0" />
           </a>
         </div>
       </div>
