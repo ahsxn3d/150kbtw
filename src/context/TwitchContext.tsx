@@ -12,7 +12,7 @@ export interface TwitchStreamState {
   refresh: () => Promise<void>;
 }
 
-const defaultStreamTitle = '🏆30k Premier | S2/S3/S4 Win Record Holder 🏆 | !sens !res !config';
+const defaultStreamTitle = '🏆30k Premier | S2/S3/S4 Win Record Holder 🏆| !skinclub !tradeit !dm !sign !ego';
 
 const defaultState: TwitchStreamState = {
   isLive: false,
@@ -29,14 +29,68 @@ const defaultState: TwitchStreamState = {
 const TwitchContext = createContext<TwitchStreamState>(defaultState);
 
 const CHANNEL = '150k';
-const POLLING_INTERVAL_MS = 60000; // Poll every 60 seconds
+const POLLING_INTERVAL_MS = 30000; // Poll every 30s for fast live detection
 
 export const TwitchProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [streamState, setStreamState] = useState<TwitchStreamState>(defaultState);
 
   const fetchTwitchData = useCallback(async () => {
     try {
-      // DecAPI provides fast, public, CORS-enabled Twitch Helix endpoints with zero API keys required
+      // 1. Primary: Direct official Twitch GQL API (real-time, zero cache lag, CORS-enabled)
+      const gqlResponse = await fetch('https://gql.twitch.tv/gql', {
+        method: 'POST',
+        headers: {
+          'Client-Id': 'kimne78kx3ncx6brgo4mv6wki5h1ko',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `query {
+            user(login: "${CHANNEL}") {
+              login
+              displayName
+              stream {
+                id
+                title
+                type
+                viewersCount
+                game { name }
+              }
+              broadcastSettings {
+                title
+                game { name }
+              }
+            }
+          }`,
+        }),
+      });
+
+      if (gqlResponse.ok) {
+        const gqlData = await gqlResponse.json();
+        const user = gqlData?.data?.user;
+        if (user) {
+          const stream = user.stream;
+          const isLive = stream?.type === 'live';
+          const viewers = stream?.viewersCount || 0;
+          const rawTitle = stream?.title || user.broadcastSettings?.title || defaultStreamTitle;
+          const rawGame = stream?.game?.name || user.broadcastSettings?.game?.name || 'Counter-Strike 2';
+          const cleanGame = rawGame.toLowerCase() === 'counter-strike' ? 'Counter-Strike 2' : rawGame;
+
+          setStreamState({
+            isLive,
+            title: rawTitle,
+            game: cleanGame,
+            viewerCount: viewers,
+            uptime: '',
+            isLoading: false,
+            error: null,
+            lastUpdated: Date.now(),
+            refresh: fetchTwitchData,
+          });
+          return;
+        }
+      }
+
+      // 2. Fallback: DecAPI
       const [uptimeRes, titleRes, gameRes, viewersRes] = await Promise.allSettled([
         fetch(`https://decapi.me/twitch/uptime/${CHANNEL}`, { cache: 'no-store' }).then((r) => r.text()),
         fetch(`https://decapi.me/twitch/title/${CHANNEL}`, { cache: 'no-store' }).then((r) => r.text()),
@@ -49,7 +103,6 @@ export const TwitchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const gameText = gameRes.status === 'fulfilled' ? gameRes.value.trim() : '';
       const viewersText = viewersRes.status === 'fulfilled' ? viewersRes.value.trim() : '';
 
-      // Check if channel is live: decapi returns "channel is offline" or stream uptime if live
       const isOfflineText = 
         uptimeText.toLowerCase().includes('offline') || 
         uptimeText.toLowerCase().includes('not found') ||
@@ -57,20 +110,15 @@ export const TwitchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       
       const isLive = !isOfflineText && uptimeText.length > 0;
 
-      // Parse viewers
       let viewers = 0;
       if (isLive && viewersText && !viewersText.toLowerCase().includes('offline')) {
         const parsed = parseInt(viewersText.replace(/[^0-9]/g, ''), 10);
         if (!isNaN(parsed)) viewers = parsed;
       }
 
-      // Title & game fallback
-      const cleanTitle = titleText && !titleText.toLowerCase().includes('error') && !titleText.toLowerCase().includes('not found')
-        ? titleText
-        : defaultStreamTitle;
-
-      const cleanGame = gameText && !gameText.toLowerCase().includes('error') && !gameText.toLowerCase().includes('not found')
-        ? (gameText.toLowerCase() === 'counter-strike' ? 'Counter-Strike 2' : gameText)
+      const cleanTitle = titleText && !titleText.toLowerCase().includes('error') ? titleText : defaultStreamTitle;
+      const cleanGame = gameText && !gameText.toLowerCase().includes('error') 
+        ? (gameText.toLowerCase() === 'counter-strike' ? 'Counter-Strike 2' : gameText) 
         : 'Counter-Strike 2';
 
       setStreamState({

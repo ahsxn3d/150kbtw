@@ -100,14 +100,14 @@ export const HubPage: React.FC<HubPageProps> = ({ onCopy, onNavigateSettings }) 
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ff1e27]" />
             </span>
             <span className="text-[11px] sm:text-xs font-mono font-bold tracking-wider text-white">
-              LIVE ON TWITCH · {viewerCount > 0 ? `${viewerCount.toLocaleString()} VIEWERS` : (uptime ? `UPTIME ${uptime.toUpperCase()}` : '30K PREMIER RECORD')}
+              LIVE ON TWITCH · COUNTER-STRIKE 2 CREATOR
             </span>
           </div>
         ) : (
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-900/70 border border-white/10 shadow-sm backdrop-blur-md">
             <span className="w-2 h-2 rounded-full bg-neutral-500" />
             <span className="text-[11px] sm:text-xs font-mono font-bold tracking-wider text-neutral-300">
-              OFFLINE · CS2 PREMIER RECORD HOLDER
+              OFFLINE · COUNTER-STRIKE 2 CREATOR
             </span>
           </div>
         )}
@@ -182,7 +182,7 @@ export const HubPage: React.FC<HubPageProps> = ({ onCopy, onNavigateSettings }) 
               MIKA <span className="text-[#ff1e27]">"150k"</span>
             </h1>
             <p className="text-[10px] sm:text-[11px] font-mono text-neutral-400 mt-0.5">
-              Counter Strike 2 Creator
+              Counter-Strike 2 Creator
             </p>
           </div>
         </div>

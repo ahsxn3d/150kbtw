@@ -33,7 +33,7 @@ export const TacticalHeader: React.FC<TacticalHeaderProps> = ({
     <header className="w-full shrink-0 border-b border-white/10 bg-[#09090b]/45 backdrop-blur-md z-30 transition-all">
       <div className="max-w-7xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between gap-4">
         {/* Brand Zone */}
-        <div className="flex items-center gap-3.5">
+        <div className="flex items-center gap-3.5 shrink-0 flex-nowrap">
           <div 
             onClick={() => onSelectTab('HUB')}
             className="flex items-center gap-2 cursor-pointer group"
@@ -52,37 +52,37 @@ export const TacticalHeader: React.FC<TacticalHeaderProps> = ({
 
           {/* Real-time Live Viewers & Total Number of Viewers Badge */}
           {isLive ? (
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/40 border border-[#ff1e27]/50 text-[11px] font-mono text-neutral-300 shadow-[0_0_12px_rgba(255,30,39,0.3)]">
-              <span className="relative flex h-2 w-2">
+            <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/40 border border-[#ff1e27]/50 text-[11px] font-mono text-neutral-300 shadow-[0_0_12px_rgba(255,30,39,0.3)] whitespace-nowrap shrink-0 flex-nowrap">
+              <span className="relative flex h-2 w-2 shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ff1e27] opacity-80" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ff1e27]" />
               </span>
-              <span className="tabular-nums font-bold text-white">
-                {viewerCount > 0 ? viewerCount.toLocaleString() : 'ON AIR'}
+              <span className="tabular-nums font-bold text-white shrink-0">
+                {viewerCount > 0 ? viewerCount.toLocaleString() : 'LIVE'}
               </span>
-              <span className="text-[#ff1e27] uppercase tracking-wider text-[10px] font-bold">
+              <span className="text-[#ff1e27] uppercase tracking-wider text-[10px] font-bold shrink-0">
                 Live
               </span>
-              <span className="text-neutral-600">·</span>
-              <span className="tabular-nums font-semibold text-neutral-300">
+              <span className="text-neutral-600 shrink-0">·</span>
+              <span className="tabular-nums font-semibold text-neutral-300 shrink-0">
                 384K
               </span>
-              <span className="text-neutral-500 uppercase tracking-wider text-[10px]">
-                Views
+              <span className="text-neutral-500 uppercase tracking-wider text-[10px] whitespace-nowrap shrink-0">
+                Total&nbsp;Views
               </span>
             </div>
           ) : (
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-900/80 border border-white/10 text-[11px] font-mono text-neutral-300 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-neutral-500" />
-              <span className="text-neutral-400 uppercase tracking-wider text-[10px] font-semibold">
+            <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-900/80 border border-white/10 text-[11px] font-mono text-neutral-300 shadow-sm whitespace-nowrap shrink-0 flex-nowrap">
+              <span className="w-2 h-2 rounded-full bg-neutral-500 shrink-0" />
+              <span className="text-neutral-400 uppercase tracking-wider text-[10px] font-semibold shrink-0">
                 Offline
               </span>
-              <span className="text-neutral-600">·</span>
-              <span className="tabular-nums font-semibold text-neutral-300">
+              <span className="text-neutral-600 shrink-0">·</span>
+              <span className="tabular-nums font-semibold text-neutral-300 shrink-0">
                 384K
               </span>
-              <span className="text-neutral-500 uppercase tracking-wider text-[10px]">
-                Total Views
+              <span className="text-neutral-500 uppercase tracking-wider text-[10px] whitespace-nowrap shrink-0">
+                Total&nbsp;Views
               </span>
             </div>
           )}
