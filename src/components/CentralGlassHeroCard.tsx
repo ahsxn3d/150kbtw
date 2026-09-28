@@ -3,6 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { Play, Pause, Music, Radio } from 'lucide-react';
 import { useAudioPlayer } from '../context/AudioContext';
 import { CircularAudioVisualizer } from './CircularAudioVisualizer';
+import { SwirlingEmbersOverlay } from './SwirlingEmbersOverlay';
 
 interface CentralGlassHeroCardProps {
   onNotify?: (msg: string) => void;
@@ -55,11 +56,17 @@ export const CentralGlassHeroCard: React.FC<CentralGlassHeroCardProps> = ({ onNo
       className="relative flex items-center justify-center select-none"
       style={{ perspective: 1200 }}
     >
-      {/* Outer ambient liquid crimson back-glow */}
+      {/* Outer ambient liquid crimson back-glow (Breathing when playing) */}
       <div
-        className="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-[#ff1e27]/30 via-red-600/15 to-transparent blur-3xl pointer-events-none transition-opacity duration-500"
-        style={{ opacity: isHovered || isPlaying ? 0.95 : 0.5 }}
+        className="absolute -inset-6 rounded-3xl bg-gradient-to-tr from-[#ff1e27]/30 via-red-600/20 to-transparent blur-3xl pointer-events-none transition-all duration-700"
+        style={{
+          opacity: isPlaying ? 0.95 : isHovered ? 0.75 : 0.4,
+          animation: isPlaying ? 'acousticAuraBreathe 3s ease-in-out infinite' : 'none',
+        }}
       />
+
+      {/* Swirling Fiery Embers & Acoustic Motes (Only emitted around card when playing) */}
+      <SwirlingEmbersOverlay isPlaying={isPlaying} />
 
       {/* Main 3D Tilted Smoked Glass Hero Card Container - Translucent Glass */}
       <motion.div

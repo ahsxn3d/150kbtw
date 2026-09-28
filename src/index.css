@@ -68,3 +68,34 @@
   box-shadow: 0 0 25px rgba(255, 30, 39, 0.2), inset 0 0 15px rgba(255, 30, 39, 0.05);
 }
 
+/* Radial Acoustic Bass Shockwaves for Central Hero Card */
+@keyframes acousticShockwave {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.8;
+    border-color: rgba(255, 30, 39, 0.65);
+    box-shadow: 0 0 20px rgba(255, 30, 39, 0.5), inset 0 0 15px rgba(255, 30, 39, 0.2);
+  }
+  40% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: scale(1.38);
+    opacity: 0;
+    border-color: rgba(255, 30, 39, 0);
+    box-shadow: 0 0 45px rgba(255, 30, 39, 0), inset 0 0 25px rgba(255, 30, 39, 0);
+  }
+}
+
+@keyframes acousticAuraBreathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.95;
+    filter: blur(45px);
+  }
+}
+
