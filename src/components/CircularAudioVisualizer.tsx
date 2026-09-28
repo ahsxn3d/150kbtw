@@ -68,7 +68,7 @@ export const CircularAudioVisualizer: React.FC<CircularAudioVisualizerProps> = (
       if (analyserRef.current && isPlaying && vol > 0) {
         const analyser = analyserRef.current;
         const binCount = analyser.frequencyBinCount;
-        const dataArray = new Uint8Array(binCount);
+        const dataArray = new Uint8Array(new ArrayBuffer(binCount));
         analyser.getByteFrequencyData(dataArray);
 
         const sampleRate = analyser.context?.sampleRate || 44100;

@@ -68,14 +68,14 @@ export const RealtimeAudioVisualizer: React.FC<RealtimeAudioVisualizerProps> = (
       const vol = currentVolRef.current;
       const currentBars = currentBarsRef.current;
 
-      let dataArray: Uint8Array | null = null;
+      let dataArray: Uint8Array<ArrayBuffer> | null = null;
       let binCount = 0;
       let binHz = 21.53; // Default 44100 / 2048
 
       if (analyserRef.current && isPlaying && vol > 0) {
         const analyser = analyserRef.current;
         binCount = analyser.frequencyBinCount;
-        dataArray = new Uint8Array(binCount);
+        dataArray = new Uint8Array(new ArrayBuffer(binCount));
         analyser.getByteFrequencyData(dataArray);
 
         const sampleRate = analyser.context?.sampleRate || 44100;
@@ -154,7 +154,9 @@ export const RealtimeAudioVisualizer: React.FC<RealtimeAudioVisualizerProps> = (
           className={`relative h-full flex flex-col justify-end items-center ${barWidthClass}`}
         >
           <div
-            ref={(el) => (barRefs.current[idx] = el)}
+            ref={(el) => {
+              barRefs.current[idx] = el;
+            }}
             className="w-full rounded-t-sm rounded-b-none transition-[background] duration-150"
             style={{
               height: '2px',
